@@ -1,3 +1,3 @@
-# project-2-game
+# project-2-passwordgenerator
 
 Game in Python 3.
