@@ -9,33 +9,48 @@
 # imports
 import pygame, random
 
-from Car import Car
+from snake import Snake
 pygame.init()
 
-GREEN = (20, 255, 140)
+GREEN = (76, 187, 40)
 GREY =  (210, 210, 210)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 PURPLE = (255, 0, 255)
+BLUE = (80, 0, 255)
 
-SCREENWIDTH = 400
-SCREENHEIGHT = 500
+SCREENWIDTH = 600
+SCREENHEIGHT = 600
 
 size = (SCREENWIDTH, SCREENHEIGHT)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Car Racing")
+pygame.display.set_caption("Snekgem")
 
 all_sprites_list = pygame.sprite.Group()
 
-playerCar = Car(RED, 20, 30)
-playerCar.rect.x = 200
-playerCar.rect.y = 300
+playerSnake = Snake(BLUE, 30, 30)
+playerSnake.rect.x = SCREENWIDTH/2
+playerSnake.rect.y = SCREENHEIGHT/2
 
-all_sprites_list.add(playerCar)
+
+all_sprites_list.add(playerSnake)
 
 carryOn = True
 clock = pygame.time.Clock()
 
+def steering(player):
+        if keys[pygame.K_LEFT]:
+                player.rect.y += 0
+                player.rect.x -= 1
+        if keys[pygame.K_RIGHT]:
+                player.rect.y += 0
+                player.rect.x += 1
+        if keys[pygame.K_UP]:
+                player.rect.x += 0
+                player.rect.y -= 1
+        if keys[pygame.K_DOWN]:
+                player.rect.x += 0 
+                player.rect.y += 1
 while carryOn:
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -44,14 +59,9 @@ while carryOn:
                         if event.key == pygame.K_x:
                                 carryOn = False
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-                playerCar.moveLeft(5)
-        if keys[pygame.K_RIGHT]:
-                playerCar.moveRight(5)
+        steering(playerSnake)
         all_sprites_list.update()
         screen.fill(GREEN)
-        pygame.draw.rect(screen, GREY, [40, 0, 200, 300])
-        pygame.draw.line(screen, WHITE, [140, 0], [140, 300],5)
         all_sprites_list.draw(screen)
         pygame.display.flip()
         clock.tick(60)
