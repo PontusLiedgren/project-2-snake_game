@@ -25,11 +25,11 @@ SCREENHEIGHT = 600
 
 size = (SCREENWIDTH, SCREENHEIGHT)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Snekgem")
+pygame.display.set_caption("Snake Game")
 
 all_sprites_list = pygame.sprite.Group()
 
-playerSnake = Snake(BLUE, 30, 30)
+playerSnake = Snake(BLUE, 40, 40)
 playerSnake.rect.x = SCREENWIDTH / 2
 playerSnake.rect.y = SCREENHEIGHT / 2
 
@@ -38,21 +38,26 @@ all_sprites_list.add(playerSnake)
 
 carryOn = True
 clock = pygame.time.Clock()
-
+direction = 0
 
 def steering(player):
-    if keys[pygame.K_LEFT]:
-        player.rect.y += 0
-        player.rect.x -= 1
-    if keys[pygame.K_RIGHT]:
-        player.rect.y += 0
-        player.rect.x += 1
-    if keys[pygame.K_UP]:
-        player.rect.x += 0
-        player.rect.y -= 1
-    if keys[pygame.K_DOWN]:
-        player.rect.x += 0
-        player.rect.y += 1
+    for y in range(height):
+            for x in range(width):
+                    rect = pygame.Rect(x*block_size, y*block_size, block_size, block_size)
+    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+        player.rect.y += rect
+        player.rect.x -= rect
+    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        player.rect.y += rect
+        player.rect.x += rect
+    if keys[pygame.K_w] or keys[pygame.K_UP]:
+        player.rect.x += rect
+        player.rect.y -= rect
+    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+        player.rect.x += rect
+        player.rect.y += rect
+
+
 
 
 while carryOn:
@@ -62,6 +67,7 @@ while carryOn:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
                 carryOn = False
+        
     keys = pygame.key.get_pressed()
     steering(playerSnake)
     all_sprites_list.update()
