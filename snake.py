@@ -1,26 +1,103 @@
-import pygame
+# project-2-snake
+#
+# Author: Pontus Liedgren
+# https://github.com/PontusLiedgren/project-2-snake_game
 
+# Snake game
+
+# imports
+import pygame, random
+
+pygame.init()
+
+GREEN = (76, 187, 40)
+GREY = (210, 210, 210)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+PURPLE = (255, 0, 255)
+BLUE = (80, 0, 255)
 
+SCREENWIDTH = 600
+SCREENHEIGHT = 600
+BLOCK_SIZE = 40
 
-class Snake(pygame.sprite.Sprite):
-    speed = 8
-    def __init__(self, color, width, height):
-        block_size = 40
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
-        pygame.draw.rect(self.image, color, [0, 0, width, height])
-        self.rect = self.image.get_rect()
-    def moveRight(self):
-        self.rect.x = self.rect.x + self.speed
+GRID = {
+    "width": SCREENWIDTH / BLOCK_SIZE,
+    "height": SCREENHEIGHT / BLOCK_SIZE
+}
 
-    def moveLeft(self):
-        self.rect.x = self.rect.x - self.speed
+PLAYER = {
+    "x": 7,
+    "y": 7,
+    "direction": "down"
+}
 
-    def moveUp(self):
-        self.rect.y = self.rect.y - self.speed
+TAILS = []
+FOOD = {
 
-    def moveDown(self):
-        self.rect.y = self.rect.y + self.speed
+}
+
+size = (SCREENWIDTH, SCREENHEIGHT)
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Snake Game")
+
+carryOn = True
+clock = pygame.time.Clock()
+
+target_per_second = 4
+ticker = 0
+
+while carryOn:
+    # event catcher
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            carryOn = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                carryOn = False
+            if event.key == pygame.K_w:
+                if PLAYER["direction"] != "down":
+                    PLAYER["direction"] = "up"
+            if event.key == pygame.K_s:
+                if PLAYER["direction"] != "up":
+                    PLAYER["direction"] = "down"
+            if event.key == pygame.K_a:
+                if PLAYER["direction"] != "right":
+                    PLAYER["direction"] = "left"
+            if event.key == pygame.K_d:
+                if PLAYER["direction"] != "left":
+                    PLAYER["direction"] = "right"
+    
+    # update
+    ticker += 1
+    if (ticker == (60 / target_per_second)):
+        ticker = 0
+
+        # movement update
+        if PLAYER["direction"] == "up":
+            PLAYER["y"] -= 1
+        if PLAYER["direction"] == "down":
+            PLAYER["y"] += 1
+        if PLAYER["direction"] == "left":
+            PLAYER["x"] -= 1
+        if PLAYER["direction"] == "right":
+            PLAYER["x"] += 1
+
+        # out of bounds detection
+        if PLAYER["x"] < 0 or PLAYER["x"] > GRID["width"]:
+            print("OUT OF BOUNDS!")
+            carryOn = False
+
+        if PLAYER["y"] < 0 or PLAYER["y"] > GRID["height"]:
+            print("OUT OF BOUNDS!")
+            carryOn = False
+
+    # draw
+    screen.fill(GREEN)
+    pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+
+    # push to screen
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
