@@ -34,7 +34,8 @@ PLAYER = {
 
 TAILS = []
 FOOD = {
-
+    "x": random.randrange(1, 15),
+    "y": random.randrange(1, 15)
 }
 
 size = (SCREENWIDTH, SCREENHEIGHT)
@@ -72,7 +73,7 @@ while carryOn:
     ticker += 1
     if (ticker == (60 / target_per_second)):
         ticker = 0
-
+        
         # movement update
         if PLAYER["direction"] == "up":
             PLAYER["y"] -= 1
@@ -92,10 +93,12 @@ while carryOn:
             print("OUT OF BOUNDS!")
             carryOn = False
 
+        # food spawn 
+
     # draw
     screen.fill(GREEN)
     pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-
+    pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
     # push to screen
     pygame.display.flip()
     clock.tick(60)
