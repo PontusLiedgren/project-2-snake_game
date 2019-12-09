@@ -92,7 +92,7 @@ while carryOn:
         
         # tail update   
         if TAILS:
-            TAILS.pop(-1)
+            TAILS.pop(0)
         if SCORE > 0:
             TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
 
@@ -120,7 +120,9 @@ while carryOn:
             SCORE += 1
             FOOD = create_food()
             TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
-            
+
+        # player colission
+        
     # draw
     screen.fill(GREEN)
     pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
@@ -129,8 +131,8 @@ while carryOn:
     for tail in TAILS:
         pygame.draw.rect(screen, PURPLE,(tail["x"]*BLOCK_SIZE, tail["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
 
-    text = font.render("Score: "+str(SCORE), True, GREY)
-    screen.blit(text,[20,20])
+    score_text = font.render("Score: "+str(SCORE), True, GREY)
+    screen.blit(score_text,[20,20])
 
     # push to screen
     pygame.display.flip()
