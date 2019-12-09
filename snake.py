@@ -14,7 +14,7 @@ GREEN = (76, 187, 40)
 GREY = (210, 210, 210)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-PURPLE = (255, 0, 255)
+PURPLE = (150, 0, 255)
 BLUE = (80, 0, 255)
 
 SCREENWIDTH = 600
@@ -94,7 +94,7 @@ while carryOn:
         if TAILS:
             TAILS.pop(0)
         if SCORE > 0:
-            TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
+            TAILS.append(create_tail(PLAYER["x"], PLAYER["y"])) 
 
         # movement update
         if PLAYER["direction"] == "up":
@@ -121,16 +121,14 @@ while carryOn:
             FOOD = create_food()
             TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
 
-        # player colission
-        
+        # player collision
     # draw
     screen.fill(GREEN)
-    pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-    pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-    
     for tail in TAILS:
         pygame.draw.rect(screen, PURPLE,(tail["x"]*BLOCK_SIZE, tail["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
 
+    pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+    pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
     score_text = font.render("Score: "+str(SCORE), True, GREY)
     screen.blit(score_text,[20,20])
 
