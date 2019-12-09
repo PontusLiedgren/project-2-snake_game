@@ -57,8 +57,12 @@ def create_food():
     }
     return FOOD
     
-def create_tail():
-    print("idk")
+def create_tail(x, y):
+    new_tail = {
+        "x": x,
+        "y": y
+    }
+    return new_tail
 
 while carryOn:
     # event catcher
@@ -86,6 +90,12 @@ while carryOn:
     if (ticker == (60 / target_per_second)):
         ticker = 0
         
+        # tail update   
+        if TAILS:
+            TAILS.pop(-1)
+        if SCORE > 0:
+            TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
+
         # movement update
         if PLAYER["direction"] == "up":
             PLAYER["y"] -= 1
@@ -109,16 +119,19 @@ while carryOn:
         if PLAYER["x"] == FOOD["x"] and PLAYER["y"] == FOOD["y"]:
             SCORE += 1
             FOOD = create_food()
-              
-    # tail spawn
-
+            TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
+            
     # draw
     screen.fill(GREEN)
     pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
     pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+    
+    for tail in TAILS:
+        pygame.draw.rect(screen, PURPLE,(tail["x"]*BLOCK_SIZE, tail["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+
     text = font.render("Score: "+str(SCORE), True, GREY)
     screen.blit(text,[20,20])
-    
+
     # push to screen
     pygame.display.flip()
     clock.tick(60)
