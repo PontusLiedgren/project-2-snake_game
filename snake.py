@@ -33,9 +33,10 @@ PLAYER = {
 }
 
 TAILS = []
+SCORE = 0
 FOOD = {
-    "x": random.randrange(1, 15),
-    "y": random.randrange(1, 15)
+    "x": 7,
+    "y": 11
 }
 
 size = (SCREENWIDTH, SCREENHEIGHT)
@@ -44,9 +45,20 @@ pygame.display.set_caption("Snake Game")
 
 carryOn = True
 clock = pygame.time.Clock()
-
 target_per_second = 4
 ticker = 0
+font = pygame.font.SysFont("comicsansms", 30)
+
+# functions
+def create_food():
+    FOOD = {
+        "x": random.randrange(1, GRID["width"]),
+        "y": random.randrange(1, GRID["height"])
+    }
+    return FOOD
+    
+def create_tail():
+    print("idk")
 
 while carryOn:
     # event catcher
@@ -94,13 +106,20 @@ while carryOn:
             carryOn = False
 
         # food spawn 
+        if PLAYER["x"] == FOOD["x"] and PLAYER["y"] == FOOD["y"]:
+            SCORE += 1
+            FOOD = create_food()
+              
+    # tail spawn
 
     # draw
     screen.fill(GREEN)
     pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
     pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+    text = font.render("Score: "+str(SCORE), True, GREY)
+    screen.blit(text,[20,20])
+    
     # push to screen
     pygame.display.flip()
     clock.tick(60)
-
 pygame.quit()
