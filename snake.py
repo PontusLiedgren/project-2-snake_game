@@ -10,16 +10,23 @@ import pygame, random
 
 pygame.init()
 
+# colors
 GREEN = (76, 187, 40)
 GREY = (210, 210, 210)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 PURPLE = (150, 0, 255)
 BLUE = (80, 0, 255)
+BLACK = (0, 0, 0)
 
+# game board
 SCREENWIDTH = 600
 SCREENHEIGHT = 600
-BLOCK_SIZE = 40
+BLOCK_SIZE = 20
+
+TAILS = []
+SCORE = 0
+PAUSED = False
 
 GRID = {
     "width": SCREENWIDTH / BLOCK_SIZE,
@@ -29,11 +36,10 @@ GRID = {
 PLAYER = {
     "x": 7,
     "y": 7,
-    "direction": "down"
+    "direction": "down",
+    "direction_change_allowed": True
 }
 
-TAILS = []
-SCORE = 0
 FOOD = {
     "x": 7,
     "y": 11
@@ -45,9 +51,10 @@ pygame.display.set_caption("Snake Game")
 
 carryOn = True
 clock = pygame.time.Clock()
-target_per_second = 4
+target_per_second = 10
 ticker = 0
-font = pygame.font.SysFont("comicsansms", 30)
+font_score = pygame.font.SysFont("Terminal", 30)
+font_paused = pygame.font.SysFont("Terminal", 100)
 
 # functions
 def create_food():
@@ -65,31 +72,41 @@ def create_tail(x, y):
     return new_tail
 
 while carryOn:
+
     # event catcher
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             carryOn = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                carryOn = False
-            if event.key == pygame.K_w:
-                if PLAYER["direction"] != "down":
-                    PLAYER["direction"] = "up"
-            if event.key == pygame.K_s:
-                if PLAYER["direction"] != "up":
-                    PLAYER["direction"] = "down"
-            if event.key == pygame.K_a:
-                if PLAYER["direction"] != "right":
-                    PLAYER["direction"] = "left"
-            if event.key == pygame.K_d:
-                if PLAYER["direction"] != "left":
-                    PLAYER["direction"] = "right"
-    
-    # update
-    ticker += 1
-    if (ticker == (60 / target_per_second)):
-        ticker = 0
+                if PAUSED:
+                    PAUSED = False
+                else:
+                    PAUSED = True
+            if not PAUSED: 
+                if event.key == pygame.K_w and PLAYER["direction_change_allowed"]:
+                    if PLAYER["direction"] != "down":
+                        PLAYER["direction"] = "up"
+                        PLAYER["direction_change_allowed"] = False
+                if event.key == pygame.K_s and PLAYER["direction_change_allowed"]:
+                    if PLAYER["direction"] != "up":
+                        PLAYER["direction"] = "down"
+                        PLAYER["direction_change_allowed"] = False
+                if event.key == pygame.K_a and PLAYER["direction_change_allowed"]:
+                    if PLAYER["direction"] != "right":
+                        PLAYER["direction"] = "left"
+                        PLAYER["direction_change_allowed"] = False
+                if event.key == pygame.K_d and PLAYER["direction_change_allowed"]:
+                    if PLAYER["direction"] != "left":
+                        PLAYER["direction"] = "right"
+                        PLAYER["direction_change_allowed"] = False
         
+    # update
+    if not PAUSED:
+        ticker += 1
+    if (ticker == (60 / target_per_second) and not PAUSED):
+        ticker = 0
+
         # tail update   
         if TAILS:
             TAILS.pop(0)
@@ -105,6 +122,7 @@ while carryOn:
             PLAYER["x"] -= 1
         if PLAYER["direction"] == "right":
             PLAYER["x"] += 1
+        PLAYER["direction_change_allowed"] = True
 
         # out of bounds detection
         if PLAYER["x"] < 0 or PLAYER["x"] > GRID["width"]:
@@ -114,30 +132,60 @@ while carryOn:
         if PLAYER["y"] < 0 or PLAYER["y"] > GRID["height"]:
             print("OUT OF BOUNDS!")
             carryOn = False
+
         # tail collision
         for tail_collision in TAILS:
             if PLAYER["x"] == tail_collision["x"] and PLAYER["y"] == tail_collision["y"]:
                 carryOn = False
+
         # food spawn 
         if PLAYER["x"] == FOOD["x"] and PLAYER["y"] == FOOD["y"]:
             SCORE += 1
             FOOD = create_food()
             TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
 
-        
-
-
     # draw
+    # background    
     screen.fill(GREEN)
+    
+    # tail
     for tail in TAILS:
-        pygame.draw.rect(screen, PURPLE,(tail["x"]*BLOCK_SIZE, tail["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(
+            screen, 
+            BLACK,
+            (
+                tail["x"]*BLOCK_SIZE,
+                tail["y"]*BLOCK_SIZE,
+                BLOCK_SIZE, 
+                BLOCK_SIZE
+            )
+        )
 
-    pygame.draw.rect(screen, BLUE,(PLAYER["x"]*BLOCK_SIZE, PLAYER["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+    # snake head
+    pygame.draw.rect(
+        screen,
+        BLUE,
+        (
+            PLAYER["x"]*BLOCK_SIZE,
+            PLAYER["y"]*BLOCK_SIZE,
+            BLOCK_SIZE, 
+            BLOCK_SIZE
+        )
+    )
+
+    # food
     pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-    score_text = font.render("Score: "+str(SCORE), True, GREY)
-    screen.blit(score_text,[20,20])
-    collision_text = font.render("Snake", True, GREY)
-    screen.blit(collision_text,[250,20])
+
+    # scoreboard
+    score_text = font_score.render("Score: "+str(SCORE), True, WHITE)
+    screen.blit(score_text,[10,10])
+
+    # pause
+    paused_text = font_paused.render("Paused!", True, WHITE)
+    if PAUSED:
+        screen.blit(paused_text,[180,220])
+
+
     # push to screen
     pygame.display.flip()
     clock.tick(60)
