@@ -114,14 +114,19 @@ while carryOn:
         if PLAYER["y"] < 0 or PLAYER["y"] > GRID["height"]:
             print("OUT OF BOUNDS!")
             carryOn = False
-
+        # tail collision
+        for tail_collision in TAILS:
+            if PLAYER["x"] == tail_collision["x"] and PLAYER["y"] == tail_collision["y"]:
+                carryOn = False
         # food spawn 
         if PLAYER["x"] == FOOD["x"] and PLAYER["y"] == FOOD["y"]:
             SCORE += 1
             FOOD = create_food()
             TAILS.append(create_tail(PLAYER["x"], PLAYER["y"]))
 
-        # player collision
+        
+
+
     # draw
     screen.fill(GREEN)
     for tail in TAILS:
@@ -131,7 +136,8 @@ while carryOn:
     pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
     score_text = font.render("Score: "+str(SCORE), True, GREY)
     screen.blit(score_text,[20,20])
-
+    collision_text = font.render("Snake", True, GREY)
+    screen.blit(collision_text,[250,20])
     # push to screen
     pygame.display.flip()
     clock.tick(60)
