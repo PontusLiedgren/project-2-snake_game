@@ -6,7 +6,8 @@
 # Snake game
 
 # imports
-import pygame, random
+import pygame 
+import random
 
 pygame.init()
 
@@ -22,11 +23,21 @@ BLACK = (0, 0, 0)
 # game board
 SCREENWIDTH = 600
 SCREENHEIGHT = 600
-BLOCK_SIZE = 20
+BLOCK_SIZE = 30
 
 TAILS = []
 SCORE = 0
 PAUSED = False
+
+# highscore
+
+HS_FILE = "highscore.txt"
+
+def read_txt_file(HIGHSCORE):
+    with open(HS_FILE, encoding="utf-8") as text_file:
+        HIGHSCORE = text_file.read()
+    return HIGHSCORE
+HIGHSCORE = int(read_txt_file(0))
 
 GRID = {
     "width": SCREENWIDTH / BLOCK_SIZE,
@@ -53,7 +64,7 @@ carryOn = True
 clock = pygame.time.Clock()
 target_per_second = 10
 ticker = 0
-font_score = pygame.font.SysFont("Terminal", 30)
+font_score = pygame.font.SysFont("Terminal", 40)
 font_paused = pygame.font.SysFont("Terminal", 100)
 
 # functions
@@ -137,7 +148,7 @@ while carryOn:
         for tail_collision in TAILS:
             if PLAYER["x"] == tail_collision["x"] and PLAYER["y"] == tail_collision["y"]:
                 carryOn = False
-
+        
         # food spawn 
         if PLAYER["x"] == FOOD["x"] and PLAYER["y"] == FOOD["y"]:
             SCORE += 1
@@ -174,19 +185,41 @@ while carryOn:
     )
 
     # food
-    pygame.draw.rect(screen, RED,(FOOD["x"]*BLOCK_SIZE, FOOD["y"]*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+    pygame.draw.rect(
+        screen,
+        RED,
+        (
+            FOOD["x"]*BLOCK_SIZE, 
+            FOOD["y"]*BLOCK_SIZE, 
+            BLOCK_SIZE, 
+            BLOCK_SIZE
+        )
+    )
 
     # scoreboard
     score_text = font_score.render("Score: "+str(SCORE), True, WHITE)
     screen.blit(score_text,[10,10])
 
-    # pause
+    # pause & highscore
     paused_text = font_paused.render("Paused!", True, WHITE)
-    if PAUSED:
-        screen.blit(paused_text,[180,220])
+    highscores_text = font_score.render("Highscore: "+ str(HIGHSCORE), True, WHITE)
 
+    if PAUSED:
+        screen.blit(highscores_text,[165, 300])
+        screen.blit(paused_text,[165,220])
 
     # push to screen
     pygame.display.flip()
     clock.tick(60)
 pygame.quit()
+
+# write highscore
+if not carryOn:
+    if HIGHSCORE >= SCORE:
+        file = open(HS_FILE, "w")
+        file.write(str(HIGHSCORE))
+        file.close()
+    else:
+        file = open(HS_FILE, "w")
+        file.write(str(SCORE))
+        file.close()
