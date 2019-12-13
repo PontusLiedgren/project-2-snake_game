@@ -13,9 +13,9 @@ pygame.init()
 
 # colors
 GREEN = (76, 187, 40)
-GREY = (210, 210, 210)
+GREY = (128, 128, 128)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+RED = (255, 200, 0)
 PURPLE = (150, 0, 255)
 BLUE = (80, 0, 255)
 BLACK = (0, 0, 0)
@@ -23,7 +23,7 @@ BLACK = (0, 0, 0)
 # game board
 SCREENWIDTH = 600
 SCREENHEIGHT = 600
-BLOCK_SIZE = 30
+BLOCK_SIZE = 20
 
 TAILS = []
 SCORE = 0
@@ -163,7 +163,7 @@ while carryOn:
     for tail in TAILS:
         pygame.draw.rect(
             screen, 
-            BLACK,
+            BLUE,
             (
                 tail["x"]*BLOCK_SIZE,
                 tail["y"]*BLOCK_SIZE,
@@ -175,7 +175,7 @@ while carryOn:
     # snake head
     pygame.draw.rect(
         screen,
-        BLUE,
+        WHITE,
         (
             PLAYER["x"]*BLOCK_SIZE,
             PLAYER["y"]*BLOCK_SIZE,
