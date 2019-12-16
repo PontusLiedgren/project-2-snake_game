@@ -15,9 +15,9 @@ pygame.init()
 GREEN = (76, 187, 40)
 GREY = (128, 128, 128)
 WHITE = (255, 255, 255)
-RED = (255, 200, 0)
+RED = (255, 0, 0)
 PURPLE = (150, 0, 255)
-BLUE = (80, 0, 255)
+BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 # game board
@@ -175,7 +175,7 @@ while carryOn:
     # snake head
     pygame.draw.rect(
         screen,
-        WHITE,
+        BLUE,
         (
             PLAYER["x"]*BLOCK_SIZE,
             PLAYER["y"]*BLOCK_SIZE,
@@ -183,6 +183,28 @@ while carryOn:
             BLOCK_SIZE
         )
     )
+    # snake eye
+    pygame.draw.circle(
+        screen,
+        WHITE,
+        (
+            PLAYER["x"]*BLOCK_SIZE,
+            PLAYER["y"]*BLOCK_SIZE,
+        )
+        ,5
+    )
+    # pygame.draw.rect(
+    #     screen,
+    #     BLUE,
+    #     (
+    #         PLAYER["x"]*BLOCK_SIZE,
+    #         PLAYER["y"]*BLOCK_SIZE,
+    #         BLOCK_SIZE,
+    #         BLOCK_SIZE
+    #     )
+    #     ,5
+    # )
+
 
     # food
     pygame.draw.rect(
@@ -205,8 +227,8 @@ while carryOn:
     highscores_text = font_score.render("Highscore: "+ str(HIGHSCORE), True, WHITE)
 
     if PAUSED:
-        screen.blit(highscores_text,[165, 300])
-        screen.blit(paused_text,[165,220])
+        screen.blit(highscores_text,[190, 300])
+        screen.blit(paused_text,[160,220])
 
     # push to screen
     pygame.display.flip()
