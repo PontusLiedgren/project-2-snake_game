@@ -175,7 +175,7 @@ while carryOn:
     # snake head
     pygame.draw.rect(
         screen,
-        BLUE,
+        PURPLE,
         (
             PLAYER["x"]*BLOCK_SIZE,
             PLAYER["y"]*BLOCK_SIZE,
