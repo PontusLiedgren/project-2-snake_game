@@ -23,7 +23,7 @@ BLACK = (0, 0, 0)
 # game board
 SCREENWIDTH = 600
 SCREENHEIGHT = 600
-BLOCK_SIZE = 20
+BLOCK_SIZE = 30
 
 TAILS = []
 SCORE = 0
@@ -183,28 +183,6 @@ while carryOn:
             BLOCK_SIZE
         )
     )
-    # snake eye
-    pygame.draw.circle(
-        screen,
-        WHITE,
-        (
-            PLAYER["x"]*BLOCK_SIZE,
-            PLAYER["y"]*BLOCK_SIZE,
-        )
-        ,5
-    )
-    # pygame.draw.rect(
-    #     screen,
-    #     BLUE,
-    #     (
-    #         PLAYER["x"]*BLOCK_SIZE,
-    #         PLAYER["y"]*BLOCK_SIZE,
-    #         BLOCK_SIZE,
-    #         BLOCK_SIZE
-    #     )
-    #     ,5
-    # )
-
 
     # food
     pygame.draw.rect(
