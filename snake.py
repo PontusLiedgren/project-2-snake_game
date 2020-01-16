@@ -8,6 +8,7 @@
 # imports
 import pygame 
 import random
+import requests
 
 pygame.init()
 
@@ -223,3 +224,13 @@ if not carryOn:
         file = open(HS_FILE, "w")
         file.write(str(SCORE))
         file.close()
+
+        r = requests.post("http://localhost:5000/submit", data={
+            "name": input("Namn: "),
+            "score": SCORE
+        })
+
+        if r.status_code == 201:
+            print("yay")
+        else:
+            print("noo :(")
